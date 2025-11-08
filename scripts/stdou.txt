@@ -1,0 +1,549 @@
+Logging outputs to: F:\Node\hivellm\expert\experts\expert-json\logs\test_complex_20251107_085125.jsonl
+
+======================================================================
+Running tests for: base
+======================================================================
+[base] Test 1/15: Deeply Nested Schema
+Prompt:
+Create JSON schema for: user with profile object containing settings object with preferences object containing theme (string) and language (string)
+
+Output:
+```json
+{
+  "user": {
+    "profile": {
+      "preferences": {
+        "theme": "string",
+        "language": "string"
+      }
+    }
+  }
+}
+```
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+```json
+------------------------------------------------------------
+[base] Test 2/15: Multiple Syntax Errors
+Prompt:
+Fix this JSON: {name: "John", "age": 30, "tags": ["dev" "designer",]}
+
+Output:
+{"name": "John", "age": 30, "tags": ["dev", "designer"]}
+------------------------------------------------------------
+[base] Test 3/15: Complex API Response Schema
+Prompt:
+Create JSON schema for: API response with status (number), message (string), data object, errors array of objects, and meta object with pagination
+
+Output:
+{"schema": {"type": "object", "properties": {"status": {"type": "number"}, "message": {"type": "string"}, "data": {"type": "object"}, "errors": {"type": "array", "items": {"type": "object", "properties": {"message": {"type": "string"}, "code": {"type": "string"}}}}, "meta": {"type": "object", "properties": {"page": {"type": "integer"}, "total_pages": {"type": "integer"}}}}}}
+------------------------------------------------------------
+[base] Test 4/15: JSON Repair - Trailing Comma in Object
+Prompt:
+Fix JSON: {"id": 123, "active": true,}
+
+Output:
+Okay, let's see. The user provided a JSON object: {"id": 123, "active": true,}. But looking at the structure, there's a missing closing bracket. The original JSON has a comma after "active" but doesn't close the curly braces. So I need to add the closing brace at the end.
+
+Wait, but the user's input is just the JSON. They might not have included the closing bracket. So the correct JSON should have both the closing brace and the comma after "active". Let me check again. The original JSON is missing the closing brace. So the fix is to add that. So the corrected JSON would be {"id": 123, "active": true,}.
+
+I need to make sure there are no other issues. The keys are correctly named, and the values are numbers and boolean. So the only change needed is adding the closing brace. That should make the JSON valid.
+</|assistant|>
+```json
+{"id": 123, "active": true,}
+```
+
+
+```json
+{"id": 123, "active": true,}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id": 123, "active": true}
+```
+
+
+```json
+{"id
+------------------------------------------------------------
+[base] Test 5/15: JSON Repair - Trailing Comma in Array
+Prompt:
+Fix JSON: ["apple", "banana", "orange",]
+
+Output:
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana", "orange"]
+```
+```json
+["apple", "banana
+------------------------------------------------------------
+[base] Test 6/15: JSON Repair - Single Quotes
+Prompt:
+Fix JSON: {'name': 'John', 'age': 30}
+
+Output:
+{
+  "name": "John",
+  "age": 30
+}
+------------------------------------------------------------
+[base] Test 7/15: JSON Schema with Arrays
+Prompt:
+Create JSON schema for: blog post with title (string), content (string), tags (array of strings), and comments (array of objects with author and text)
+
+Output:
+{"title": "My Blog Post", "content": "This is the content of the blog post.", "tags": ["technology", "blogging"], "comments": [{"author": "user123", "text": "Great post!"}, {"author": "user456", "text": "Love it!"}]}
+------------------------------------------------------------
+[base] Test 8/15: JSON Transform Request
+Prompt:
+Transform this flat JSON to nested: {"user_name": "Alice", "user_email": "alice@example.com", "user_age": 25}
+
+Output:
+{"user_name": "Alice", "user_email": "alice@example.com", "user_age": 25}
+------------------------------------------------------------
+[base] Test 9/15: OpenAPI Request Schema
+Prompt:
+Create JSON schema for: POST /api/users request body with username (string, required), email (string, required), age (number, optional), and role (enum: admin, user, guest)
+
+Output:
+```json
+{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "age": {
+      "type": "number",
+      "optional": true
+    },
+    "role": {
+      "type": "enum",
+      "enum": {
+        "admin": "admin",
+        "user": "user",
+        "guest": "guest"
+      }
+    }
+  },
+  "required": ["username", "email"]
+}
+```
+```json
+{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "age": {
+      "type": "number",
+      "optional": true
+    },
+    "role": {
+      "type": "enum",
+      "enum": {
+        "admin": "admin",
+        "user": "user",
+        "guest": "guest"
+      }
+    }
+  }
+}
+```
+```json
+{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true"
+    },
+    "age": {
+      "type": "number",
+      "optional": true
+    },
+    "role": {
+      "type": "enum",
+      "enum": {
+        "admin": "admin",
+        "user": "user",
+        "guest": "guest"
+      }
+    }
+  }
+}
+```
+```json
+{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true"
+    },
+    "age": {
+      "type": "number",
+      "optional": true
+    },
+    "role": {
+      "type": "enum",
+      "enum": {
+        "admin": "admin",
+        "user": "user",
+        "guest": "guest"
+      }
+    }
+  }
+}
+```
+```json
+{

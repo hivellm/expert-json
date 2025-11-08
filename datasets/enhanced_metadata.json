@@ -1,0 +1,27 @@
+{
+  "name": "expert-json-enhanced",
+  "version": "0.2.0",
+  "base_examples": 0,
+  "schema_synthetic_added": 48,
+  "schema_microsoft_added": 183,
+  "repair_examples_added": 72,
+  "total_train": 242,
+  "total_val": 30,
+  "total_test": 31,
+  "total_all": 303,
+  "improvements": [
+    "Added synthetic text to JSON Schema (48 examples)",
+    "Added Microsoft real JSON Schemas (183 examples from production)",
+    "Enhanced JSON repair with syntax fixes (72 examples)"
+  ],
+  "sources": [
+    "apis.guru (OpenAPI specs)",
+    "schemastore.org (JSON Schemas)",
+    "cloudevents (CNCF events)",
+    "paraloq (text-to-json)",
+    "mastercontrol (document extraction)",
+    "microsoft/json-schemas (REAL production schemas)",
+    "synthetic text-to-schema",
+    "synthetic json-repair-enhanced"
+  ]
+}

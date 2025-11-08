@@ -1,0 +1,266 @@
+{
+  "name": "expert-json",
+  "version": "0.4.1",
+  "schema_version": "2.0",
+      "description": "JSON generation and correction expert. Trained on 40,000 rebalanced examples from 10 sources. Dataset optimized with 70% generic format and 30% priority formats (schema, transformations, arrays). This release packages checkpoint-250 for investigative purposes (flat→nested transformations and consistent numeric calculations) while keeping known schema-generation limitations.",
+  "author": "hivellm",
+  "homepage": "https://github.com/hivellm/expert-json",
+  
+  "base_models": [
+    {
+      "name": "F:/Node/hivellm/expert/models/Qwen3-0.6B",
+      "sha256": "",
+      "quantization": "int4",
+      "rope_scaling": {
+        "type": "ntk-by-parts",
+        "factor": 8.0,
+        "max_position_embeddings": 32768,
+        "original_max_position_embeddings": 8192,
+        "fine_grained": true,
+        "_comment": "Qwen3-specific NTK-by-parts scaling (β=0.25). Matches Rust implementation."
+      },
+      "prompt_template": "chatml",
+      "adapters": [
+        {
+          "type": "dora",
+          "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "up_proj", "down_proj"],
+          "r": 14,
+          "alpha": 28,
+          "scaling": "dora",
+          "dropout": 0.1,
+          "path": "weights/qwen3-06b/checkpoint-250",
+          "size_bytes": 0,
+          "sha256": "",
+          "_comment": "DoRA r=14 trained on 40k rebalanced examples. Checkpoint-250 packaged for transformation/validation investigation (flat→nested success and consistent numerical calculations)."
+        }
+      ]
+    }
+  ],
+  
+  "soft_prompts": [],
+  
+  "capabilities": [
+    "format:json",
+    "format:openapi",
+    "format:json_schema",
+    "format:cloudevents",
+    "task:json_generation",
+    "task:json_correction",
+    "task:json_validation",
+    "task:data_extraction",
+    "feature:schema_understanding",
+    "feature:autocorrection",
+    "feature:syntax_fixing",
+    "feature:type_validation",
+    "feature:openapi_schemas",
+    "feature:json_schema_generation",
+    "feature:cloudevents_format",
+    "feature:nested_objects",
+    "feature:arrays",
+    "feature:text_to_json",
+    "feature:document_extraction",
+    "feature:error_detection",
+    "feature:missing_field_fix",
+    "feature:type_mismatch_fix",
+    "feature:extra_field_removal",
+    "usecase:api_development",
+    "usecase:configuration",
+    "usecase:event_driven",
+    "usecase:data_validation",
+    "usecase:document_parsing",
+    "usecase:medical_records",
+    "usecase:business_documents",
+    "language:en"
+  ],
+  
+  "limitations": [
+    "schema_vs_example_confusion",
+    "cannot_transform_flat_to_nested",
+    "array_repair_issues",
+    "item_count_accuracy"
+  ],
+  
+  "routing": {
+    "keywords": [
+      "json",
+      "openapi",
+      "swagger",
+      "json schema",
+      "cloudevents",
+      "api",
+      "rest",
+      "configuration",
+      "config",
+      "schema",
+      "extract",
+      "extraction",
+      "parse",
+      "document",
+      "structured data",
+      "text to json"
+    ],
+    "router_hint": "format=json OR task=json_generation OR task=json_correction OR task=data_extraction",
+    "priority": 0.75
+  },
+  
+  "constraints": {
+    "max_chain": 10,
+    "load_order": 5,
+    "incompatible_with": [],
+    "requires": []
+  },
+  
+  "perf": {
+    "latency_ms_overhead": 2.5,
+    "vram_mb_overhead": 20,
+    "supported_batch_sizes": [1, 2, 4, 8],
+    "_comment": "DoRA r=14 needs 20MB VRAM. Grammar validation adds 0.5ms latency."
+  },
+  
+  "runtime": {
+    "candle_compatible": true,
+    "requires_kv_cache_persistence": true,
+    "attention_kernel": "flash-v2",
+    "_comment": "Metadata for Rust/Candle runtime. Qwen3 uses custom flash attention kernel (not standard SDPA)."
+  },
+  
+  "training": {
+    "dataset": {
+      "path": "datasets/train.jsonl",
+      "validation_path": "datasets/validation.jsonl",
+      "test_path": "datasets/test.jsonl",
+      "format": "jsonl",
+      "streaming": false,
+      "source": "apis.guru + schemastore + cloudevents + paraloq + mastercontrol + microsoft/json-schemas + synthetic_text_to_schema + json_repair_enhanced + generated_negatives",
+      "splits": {
+        "train": 40000,
+        "validation": 0,
+        "test": 0,
+        "total": 40000
+      },
+      "preprocessing": {
+        "total_raw_examples": 308738,
+        "processed_examples": 40000,
+        "duplicates_removed": 159026,
+        "corrections_balanced": 4778,
+        "validation": "json_syntax",
+        "format": "chatml",
+        "deduplication": "sha256_content_hash",
+        "size_filter": "min_50_chars",
+        "rebalanced": true,
+        "generic_ratio": 0.70,
+        "target_total": 40000
+      },
+      "task_distribution": {
+        "generation": 35222,
+        "correction": 4778,
+        "generation_percentage": 88.1,
+        "correction_percentage": 11.9
+      },
+      "format_distribution": {
+        "generic": 28000,
+        "data_extraction": 3299,
+        "cloudevents": 2481,
+        "openapi_property": 2293,
+        "json_schema": 2190,
+        "openapi_schema": 1184,
+        "openapi_response": 392,
+        "openapi_request": 161
+      },
+      "_comment": "Rebalanced dataset: 40k examples with 70% generic format. Priority formats (30%) focus on addressing known issues: schema generation (json_schema, openapi_schema), transformations (data_extraction), array handling (openapi_response), type conversion (openapi_request). Sources: APIs.guru, SchemaStore, CloudEvents, Paraloq, MasterControl, The Stack, Microsoft schemas, synthetic schemas, repair-enhanced.",
+      "field_mapping": {
+        "text": "text"
+      }
+    },
+    "config": {
+      "method": "sft",
+      "adapter_type": "dora",
+      "use_unsloth": true,
+      "_unsloth_comment": "Enable Unsloth for 2x faster training and 70% less VRAM. Requires: pip install 'unsloth[windows] @ git+https://github.com/unslothai/unsloth.git'",
+      "rank": 14,
+      "alpha": 28,
+      "dropout": 0.1,
+      "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "up_proj", "down_proj"],
+      "epochs": 1.5,
+      "_comment": "DoRA r=14, LLaMA-Factory optimized params. Lower LR (5e-5) + higher dropout (0.1) for better generalization.",
+      "learning_rate": 5e-5,
+      "batch_size": 2,
+      "_batch_comment": "Reduced from 6 to 2 for Windows memory safety. Compensated with gradient_accumulation_steps=45 (effective batch=90).",
+      "gradient_accumulation_steps": 45,
+      "warmup_steps": 0,
+      "warmup_ratio": 0.1,
+      "_warmup_comment": "Using warmup_ratio=0.1 (10%, LLaMA-Factory best practice). warmup_steps=0 when using ratio.",
+      "lr_scheduler": "cosine",
+      "_scheduler_comment": "Simple cosine decay. More conservative to prevent pattern overfitting.",
+      "max_seq_length": 2048,
+      "_seq_length_comment": "Increased to 2048 to handle P90 (3,392 chars). Median is 859 chars, so 2048 covers most examples efficiently.",
+      "dataloader_num_workers": 0,
+      "dataloader_pin_memory": false,
+      "dataloader_prefetch_factor": 1,
+      "dataloader_persistent_workers": false,
+      "_dataloader_comment": "Windows fixes: num_workers=0, pin_memory=false, persistent_workers=false. Prevents worker memory copies and leaks.",
+      "fp16": false,
+      "bf16": true,
+      "use_tf32": true,
+      "use_sdpa": true,
+      "flash_attention_2": false,
+      "packing": true,
+      "memory_efficient_attention": true,
+      "memory_clear_every": 100,
+      "torch_compile": false,
+      "torch_compile_backend": "inductor",
+      "torch_compile_mode": "reduce-overhead",
+      "_compile_comment": "Windows fix: torch_compile=false (Triton incompatible with PyTorch 2.5.1 on Windows). Unsloth provides enough speedup.",
+      "optim": "adamw_bnb_8bit",
+      "group_by_length": false,
+      "logging_steps": 10,
+      "save_strategy": "steps",
+      "save_steps": 250,
+      "save_total_limit": null,
+      "_checkpoint_strategy": "Keep all checkpoints for evolution analysis (checkpoint-250, checkpoint-500, checkpoint-750, etc.)",
+      "evaluation_strategy": "steps",
+      "eval_steps": 250,
+      "load_best_model_at_end": true,
+      "metric_for_best_model": "eval_loss",
+      "greater_is_better": false,
+      "gradient_checkpointing": true,
+      "activation_checkpointing": "attention_only",
+      "use_cuda_graphs": false,
+      "cuda_graph_warmup_steps": 100,
+      "_cuda_graphs_comment": "Windows fix: use_cuda_graphs=false (unstable on Windows). CUDA graphs require torch.compile which leaks memory."
+    },
+    "decoding": {
+      "use_grammar": true,
+      "grammar_type": "json",
+      "validation": "parser-strict",
+      "stop_sequences": ["\n\n"],
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "_comment": "Unsloth/Qwen recommended settings: temp=0.7, top_p=0.8, top_k=20. Prevents repetition collapse. Grammar validation prevents syntax errors."
+    },
+    "trained_on": "2025-11-06",
+    "base_model_version": "qwen3-0.6b"
+  },
+  
+  "license": "cc-by-4.0",
+  "tags": [
+    "json",
+    "openapi",
+    "swagger",
+    "json-schema",
+    "cloudevents",
+    "api-development",
+    "configuration",
+    "data-validation",
+    "data-extraction",
+    "autocorrection",
+    "document-parsing",
+    "text-to-json",
+    "qwen3",
+    "dora",
+    "unsloth",
+    "windows",
+    "37k-examples"
+  ]
+}

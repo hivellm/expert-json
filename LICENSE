@@ -1,0 +1,86 @@
+Creative Commons Attribution 4.0 International License
+
+Copyright (c) 2025 HiveLLM
+
+This work is licensed under the Creative Commons Attribution 4.0 International License.
+
+To view a copy of this license, visit:
+http://creativecommons.org/licenses/by/4.0/
+
+or send a letter to:
+Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+---
+
+You are free to:
+
+  Share — copy and redistribute the material in any medium or format
+  Adapt — remix, transform, and build upon the material for any purpose, even commercially
+
+Under the following terms:
+
+  Attribution — You must give appropriate credit, provide a link to the license,
+  and indicate if changes were made. You may do so in any reasonable manner,
+  but not in any way that suggests the licensor endorses you or your use.
+
+  No additional restrictions — You may not apply legal terms or technological measures
+  that legally restrict others from doing anything the license permits.
+
+---
+
+This license is compatible with the source datasets used in this expert.
+
+Dataset Citations:
+
+APIs.guru OpenAPI Directory:
+  APIs.guru Community. 2025.
+  "APIs.guru - Wikipedia for Web APIs"
+  https://apis.guru/
+  License: CC0 1.0 Universal (Public Domain)
+
+JSON Schema Store:
+  SchemaStore.org Contributors. 2025.
+  "JSON Schema Store - A collection of schemas for popular tools"
+  https://www.schemastore.org/
+  License: Apache 2.0
+
+CloudEvents Specification:
+  CNCF CloudEvents Working Group. 2025.
+  "CloudEvents - A specification for describing event data in a common way"
+  https://cloudevents.io/
+  License: Apache 2.0
+
+Paraloq JSON Data Extraction:
+  Paraloq. 2024.
+  "JSON Data Extraction - High-quality text to JSON examples"
+  https://huggingface.co/datasets/paraloq/json_data_extraction
+  License: Apache 2.0
+
+MasterControl JSON Structured Extraction:
+  MasterControlAIML. 2024.
+  "JSON-Unstructured-Structured - Complex document extraction dataset"
+  https://huggingface.co/datasets/MasterControlAIML/JSON-Unstructured-Structured
+  License: Apache 2.0
+
+Microsoft JSON Schemas:
+  Microsoft Corporation. 2025.
+  "microsoft/json-schemas - JSON schemas for Microsoft products and services"
+  https://github.com/microsoft/json-schemas
+  License: MIT License
+  Used: 183 production JSON Schemas from Fabric, Office-JS, Teams, Copilot, Rush, API-Extractor
+
+The Stack Dataset:
+  BigCode Project. 2024.
+  "The Stack - A large collection of permissively licensed source code"
+  https://huggingface.co/datasets/bigcode/the-stack
+  License: BigCode OpenRAIL-M License
+  Used: JSON examples extracted from codebase for training
+
+Base Model Citation:
+
+Qwen3:
+  Qwen Team. 2024.
+  "Qwen3 Technical Report"
+  https://huggingface.co/Qwen/Qwen3-0.6B
+  License: Apache 2.0
+

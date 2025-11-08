@@ -1,0 +1,62 @@
+{
+  "summary": {
+    "total_examples": 40000,
+    "total_size_bytes": 80400848
+  },
+  "task_distribution": {
+    "correction": 18372,
+    "generation": 21407
+  },
+  "task_percentages": {
+    "correction": 45.93,
+    "generation": 53.5175
+  },
+  "format_distribution": {
+    "json_schema": 10919,
+    "cloudevents": 4741,
+    "openapi_schema": 9705,
+    "data_extraction": 9938,
+    "openapi_response": 2915,
+    "openapi_request": 1710
+  },
+  "format_percentages": {
+    "json_schema": 27.297500000000003,
+    "cloudevents": 11.852500000000001,
+    "openapi_schema": 24.2625,
+    "data_extraction": 24.845,
+    "openapi_response": 7.2875,
+    "openapi_request": 4.275
+  },
+  "error_types": {
+    "type_mismatch": 4784,
+    "syntax_error": 4438,
+    "missing_field": 4316,
+    "missing_comma_array": 16,
+    "extra_field": 4762,
+    "trailing_comma": 12,
+    "unquoted_keys": 12,
+    "multiple_errors": 8,
+    "single_quotes": 8,
+    "missing_comma_properties": 16
+  },
+  "schema_presence": {
+    "with_schema": 6043,
+    "without_schema": 33957
+  },
+  "size_statistics": {
+    "min": 166,
+    "max": 4030131,
+    "mean": 2010.0212,
+    "median": 982,
+    "p25": 460,
+    "p75": 2284,
+    "p90": 3482,
+    "p95": 4296
+  },
+  "json_size_statistics": {
+    "min": 17,
+    "max": 109126,
+    "mean": 1221.8564,
+    "median": 373
+  }
+}

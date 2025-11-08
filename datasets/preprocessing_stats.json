@@ -1,0 +1,22 @@
+{
+  "total_input": 62015,
+  "processed": 40000,
+  "duplicates": 4484,
+  "errors": 0,
+  "by_source": {
+    "apis_guru": 4035,
+    "schemastore": 3261,
+    "cloudevents": 5000,
+    "paraloq": 484,
+    "mastercontrol": 10000,
+    "negatives": 20000,
+    "microsoft_schemas": 183,
+    "synthetic_schemas": 48,
+    "repair_enhanced": 72
+  },
+  "format_distribution": {
+    "generation_tasks": 12296,
+    "extraction_tasks": 10484,
+    "correction_tasks": 20000
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "total_examples": 40000,
+  "splits": {
+    "train": {
+      "count": 36002,
+      "percentage": 90.005,
+      "path": "datasets\\final\\train.jsonl"
+    },
+    "validation": {
+      "count": 1999,
+      "percentage": 4.9975,
+      "path": "datasets\\final\\validation.jsonl"
+    },
+    "test": {
+      "count": 1999,
+      "percentage": 4.9975,
+      "path": "datasets\\final\\test.jsonl"
+    }
+  },
+  "split_strategy": "stratified by task type",
+  "random_seed": 42
+}

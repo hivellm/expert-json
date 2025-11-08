@@ -1,0 +1,20 @@
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"user\": \"John\", \"active\": true,}"}, "output": "{\"active\":true,\"user\":\"John\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"id\": 42, \"name\": 'Alice'}"}, "output": "{\"id\":42,\"name\":\"Alice\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"price\": 19.99 \"currency\": \"USD\"}"}, "output": "{\"currency\":\"USD\",\"price\":19.99}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"tags\": [\"red\", \"blue\", \"green\",]}"}, "output": "{\"tags\":[\"blue\",\"green\",\"red\"]}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"value\": undefined}"}, "output": "{\"value\":null}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"count\": 100 \"total\": 500}"}, "output": "{\"count\":100,\"total\":500}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"data\": {\"key\": value}}"}, "output": "{\"data\":{\"key\":\"value\"}}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"items\": [1, 2, 3, 4,]}"}, "output": "{\"items\":[1,2,3,4]}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"title\": \"Hello\", \"message\": \"World\""}, "output": "{\"message\":\"World\",\"title\":\"Hello\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"status\": \"ok\" \"code\": 200}"}, "output": "{\"code\":200,\"status\":\"ok\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"date\": 2024-01-15}"}, "output": "{\"date\":\"2024-01-15\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"nested\": {\"inner\": {key: \"value\"}}}"}, "output": "{\"nested\":{\"inner\":{\"key\":\"value\"}}}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"list\": [\"a\", \"b\", \"c\",]}"}, "output": "{\"list\":[\"a\",\"b\",\"c\"]}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"enabled\": True \"disabled\": False}"}, "output": "{\"disabled\":false,\"enabled\":true}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"numbers\": [1, 2, 3, 4, 5,]}"}, "output": "{\"numbers\":[1,2,3,4,5]}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"path\": /users/home \"file\": data.txt}"}, "output": "{\"file\":\"data.txt\",\"path\":\"/users/home\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"mixed\": [1, \"two\", 3, \"four\",]}"}, "output": "{\"mixed\":[1,\"four\",3,\"two\"]}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"empty\": null \"filled\": \"data\"}"}, "output": "{\"empty\":null,\"filled\":\"data\"}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"array\": [{id: 1}, {id: 2},]}"}, "output": "{\"array\":[{\"id\":1},{\"id\":2}]}"}
+{"task": "json_repair", "input": {"instruction": "Fix this broken JSON. Respond only with valid JSON.", "broken_json": "{\"score\": 95 \"grade\": \"A\"}"}, "output": "{\"grade\":\"A\",\"score\":95}"}

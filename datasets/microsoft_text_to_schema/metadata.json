@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/microsoft/json-schemas",
+  "total_schemas": 183,
+  "train": 146,
+  "val": 18,
+  "test": 19,
+  "date_extracted": "2025-11-06"
+}

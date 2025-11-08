@@ -1,0 +1,67 @@
+# JSON Grammar (GBNF format for llama.cpp)
+# Based on RFC 8259 - The JavaScript Object Notation (JSON) Data Interchange Format
+# https://www.rfc-editor.org/rfc/rfc8259.html
+
+root ::= value
+
+value ::= object | array | string | number | boolean | null
+
+# Object
+object ::= "{" ws "}" | "{" ws members ws "}"
+
+members ::= member | member "," ws members
+
+member ::= string ws ":" ws value
+
+# Array
+array ::= "[" ws "]" | "[" ws elements ws "]"
+
+elements ::= value | value "," ws elements
+
+# String
+string ::= "\"" characters "\""
+
+characters ::= "" | character characters
+
+character ::=
+    [^"\\] |
+    "\\" escape
+
+escape ::=
+    "\"" |
+    "\\" |
+    "/" |
+    "b" |
+    "f" |
+    "n" |
+    "r" |
+    "t" |
+    "u" hex hex hex hex
+
+hex ::= [0-9a-fA-F]
+
+# Number
+number ::= integer fraction exponent | integer fraction | integer exponent | integer
+
+integer ::= "-" digit1-9 digits | "-" digit | digit1-9 digits | digit
+
+digits ::= digit | digit digits
+
+digit ::= [0-9]
+
+digit1-9 ::= [1-9]
+
+fraction ::= "." digits
+
+exponent ::= "e" sign digits | "E" sign digits
+
+sign ::= "+" | "-" | ""
+
+# Boolean
+boolean ::= "true" | "false"
+
+# Null
+null ::= "null"
+
+# Whitespace
+ws ::= "" | " " ws | "\n" ws | "\r" ws | "\t" ws

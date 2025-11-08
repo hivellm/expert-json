@@ -1,0 +1,55 @@
+# Expert JSON - Build artifacts and datasets
+
+# Weights and checkpoints
+weights/
+*.safetensors
+*.bin
+*.pt
+
+# Raw collected data (large files - regenerable)
+datasets/raw/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Unsloth compiled cache (now centralized in expert/cache/)
+unsloth_compiled_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+*.aux
+*.out
+
+# Coverage and test reports
+coverage/
+.coverage
+htmlcov/
+*.cover
+.pytest_cache/
+
+# Charts (optional - can be regenerated)
+docs/charts/
+
+# Large intermediate files (keep final datasets)
+# Note: Final datasets in datasets/final/ are kept for training
+
