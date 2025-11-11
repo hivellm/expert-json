@@ -16,9 +16,85 @@ import json
 import hashlib
 import random
 import re
+import sys
+import os
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from collections import defaultdict, Counter
+
+# Add experts root directory to path to import common utils
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+
+# Import common preprocessing utilities for query-only sanitization
+try:
+    from common_preprocessing_utils import sanitize_chatml_response, extract_query_only
+except ImportError:
+    # Fallback if common utils not found
+    def sanitize_chatml_response(text: str, query_type: str = "auto") -> str:
+        return text.strip()
+    def extract_query_only(text: str, query_type: str = "auto") -> str:
+        return text.strip()
+
+def is_sql_cypher_or_sparql(text: str) -> bool:
+    """Detect if text is SQL, Cypher, or SPARQL (not JSON)"""
+    if not text or not text.strip():
+        return False
+    
+    text_upper = text.upper().strip()
+    
+    # SQL keywords
+    sql_keywords = ['SELECT', 'FROM', 'INSERT INTO', 'UPDATE', 'DELETE FROM', 
+                    'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE', 'JOIN', 'INNER JOIN',
+                    'LEFT JOIN', 'RIGHT JOIN', 'FULL JOIN', 'GROUP BY', 'HAVING']
+    
+    # Cypher keywords
+    cypher_keywords = ['MATCH', 'MERGE', 'RETURN', 'WITH', 'UNWIND', 'CALL', 'FOREACH']
+    
+    # SPARQL keywords
+    sparql_keywords = ['PREFIX', 'FILTER', 'OPTIONAL', 'GRAPH', 'ASK', 'CONSTRUCT', 'DESCRIBE']
+    
+    # Check if starts with SQL/Cypher/SPARQL keywords (strong indicator)
+    if text_upper.startswith(('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE TABLE', 
+                               'ALTER', 'DROP', 'MATCH', 'MERGE', 'RETURN', 'WITH', 
+                               'UNWIND', 'CALL', 'FOREACH', 'PREFIX', 'ASK', 'CONSTRUCT', 'DESCRIBE')):
+        return True
+    
+    # Check for SQL patterns
+    sql_patterns = [
+        r'\bFROM\s+\w+',  # FROM table
+        r'\bJOIN\s+\w+',  # JOIN table
+        r'\bGROUP\s+BY\b',  # GROUP BY
+        r'\bHAVING\s+',  # HAVING
+        r'\bINSERT\s+INTO\b',  # INSERT INTO
+        r'\bCREATE\s+TABLE\b',  # CREATE TABLE
+    ]
+    
+    for pattern in sql_patterns:
+        if re.search(pattern, text_upper):
+            return True
+    
+    # Check for Cypher patterns
+    cypher_patterns = [
+        r'\([^)]*:\w+\)',  # (n:Label)
+        r'-\[[^\]]*:\w+\]-',  # -[:RELATIONSHIP]->
+    ]
+    
+    for pattern in cypher_patterns:
+        if re.search(pattern, text_upper):
+            return True
+    
+    # Check for SPARQL patterns
+    sparql_patterns = [
+        r'\bPREFIX\s+\w+:',  # PREFIX prefix:
+        r'\{\s*\?',  # { ?variable
+        r'\?\w+\s+\?\w+',  # ?var1 ?var2
+    ]
+    
+    for pattern in sparql_patterns:
+        if re.search(pattern, text_upper):
+            return True
+    
+    return False
 
 def canonicalize_json(obj: Any) -> str:
     """Canonicalize JSON for deduplication"""
@@ -29,7 +105,29 @@ def hash_json(obj: Any) -> str:
     canonical = canonicalize_json(obj)
     return hashlib.sha256(canonical.encode()).hexdigest()
 
-def format_chatml_generation(example: Dict[str, Any]) -> str:
+def generate_brief_reasoning(example: Dict[str, Any], task: str = "generation") -> str:
+    """Generate a brief reasoning statement for Qwen3 compatibility.
+    
+    Qwen3 uses hybrid reasoning, so we include concise reasoning that leads to the JSON.
+    This helps the model understand when to use reasoning vs direct output.
+    """
+    format_type = example.get("format", "generic")
+    
+    if task == "generation":
+        if format_type == "openapi_schema":
+            reasoning = f"I need to generate a valid JSON object matching the OpenAPI schema."
+        elif format_type == "json_schema":
+            reasoning = f"I need to generate a valid JSON object matching the JSON Schema."
+        elif format_type == "cloudevents":
+            reasoning = f"I need to generate a valid CloudEvents JSON event."
+        else:
+            reasoning = f"I need to generate a valid JSON object."
+    else:  # correction
+        reasoning = f"I need to fix the invalid JSON and produce a valid JSON object."
+    
+    return reasoning
+
+def format_chatml_generation(example: Dict[str, Any], include_reasoning: bool = False) -> str:
     """Format positive example (generate valid JSON) with ChatML"""
     format_type = example.get("format", "generic")
     schema = example.get("schema")
@@ -55,17 +153,36 @@ def format_chatml_generation(example: Dict[str, Any]) -> str:
     user_prompt = prompts.get(format_type, prompts["generic"])
     
     # Format output JSON (pretty print if small, compact if large)
-    json_output = json.dumps(json_example, indent=2, ensure_ascii=False)
-    if len(json_output) > 500:
-        json_output = json.dumps(json_example, ensure_ascii=False)
+    json_output_raw = json.dumps(json_example, indent=2, ensure_ascii=False)
+    if len(json_output_raw) > 500:
+        json_output_raw = json.dumps(json_example, ensure_ascii=False)
     
+    # CRITICAL: Filter out SQL/Cypher/SPARQL (not JSON)
+    if is_sql_cypher_or_sparql(json_output_raw):
+        return None  # Skip this example
+    
+    # CRITICAL: Sanitize JSON to ensure query-only (no reasoning/explanation)
+    json_output = sanitize_chatml_response(json_output_raw, query_type="json")
+    if not json_output:
+        json_output = extract_query_only(json_output_raw, query_type="json")
+    
+    # For Qwen3 compatibility: optionally wrap in reasoning block
+    # Qwen3 uses hybrid reasoning: 75% reasoning + 25% direct (as per Qwen3 training notebook)
+    if include_reasoning:
+        # Generate a brief reasoning that leads to the JSON
+        reasoning = generate_brief_reasoning(example, task="generation")
+        assistant_content = f"<think>\n{reasoning}\n</think>\n{json_output}"
+    else:
+        assistant_content = json_output
+    
+    # Qwen3 format: <|im_start|>role\ncontent<|im_end|>
     return (
-        f"<|system|>\n{system_content}\n<|end|>\n"
-        f"<|user|>\n{user_prompt}\n<|end|>\n"
-        f"<|assistant|>\n{json_output}\n<|end|>"
+        f"<|im_start|>system\n{system_content}<|im_end|>\n"
+        f"<|im_start|>user\n{user_prompt}<|im_end|>\n"
+        f"<|im_start|>assistant\n{assistant_content}<|im_end|>\n"
     )
 
-def format_chatml_correction(example: Dict[str, Any]) -> str:
+def format_chatml_correction(example: Dict[str, Any], include_reasoning: bool = False) -> str:
     """Format negative example (fix invalid JSON) with ChatML"""
     format_type = example.get("format", "generic")
     corruption_type = example.get("corruption_type", "unknown")
@@ -78,10 +195,29 @@ def format_chatml_correction(example: Dict[str, Any]) -> str:
     # User prompt
     user_prompt = f"Fix this invalid JSON:\n{invalid_json}"
     
+    # CRITICAL: Filter out SQL/Cypher/SPARQL (not JSON)
+    if is_sql_cypher_or_sparql(valid_json):
+        return None  # Skip this example
+    
+    # CRITICAL: Sanitize JSON to ensure query-only (no reasoning/explanation)
+    valid_json_clean = sanitize_chatml_response(valid_json, query_type="json")
+    if not valid_json_clean:
+        valid_json_clean = extract_query_only(valid_json, query_type="json")
+    
+    # For Qwen3 compatibility: optionally wrap in reasoning block
+    # Qwen3 uses hybrid reasoning: 75% reasoning + 25% direct (as per Qwen3 training notebook)
+    if include_reasoning:
+        # Generate a brief reasoning that leads to the JSON
+        reasoning = generate_brief_reasoning(example, task="correction")
+        assistant_content = f"<think>\n{reasoning}\n</think>\n{valid_json_clean}"
+    else:
+        assistant_content = valid_json_clean
+    
+    # Qwen3 format: <|im_start|>role\ncontent<|im_end|>
     return (
-        f"<|system|>\n{system_content}\n<|end|>\n"
-        f"<|user|>\n{user_prompt}\n<|end|>\n"
-        f"<|assistant|>\n{valid_json}\n<|end|>"
+        f"<|im_start|>system\n{system_content}<|im_end|>\n"
+        f"<|im_start|>user\n{user_prompt}<|im_end|>\n"
+        f"<|im_start|>assistant\n{assistant_content}<|im_end|>\n"
     )
 
 def extract_format_from_chatml(text: str) -> str:
@@ -299,7 +435,14 @@ def main():
                 seen_hashes.add(content_hash)
                 
                 # Format with ChatML
-                text = format_chatml_generation(example)
+                # Qwen3 uses hybrid reasoning: 75% reasoning + 25% direct (as per Qwen3 training notebook)
+                include_reasoning = (reasoning_counter % 4 != 0)  # 75% with reasoning (3 out of 4)
+                reasoning_counter += 1
+                text = format_chatml_generation(example, include_reasoning=include_reasoning)
+                if text is None:  # Skipped due to SQL/Cypher/SPARQL
+                    stats["wrong_language_filtered"] = stats.get("wrong_language_filtered", 0) + 1
+                    continue
+                
                 processed.append({"text": text})
                 stats[f"{source_name}_processed"] += 1
                 
@@ -361,7 +504,14 @@ def main():
             seen_hashes.add(content_hash)
             
             # Format with ChatML
-            text = format_chatml_correction(example)
+            # Qwen3 uses hybrid reasoning: 75% reasoning + 25% direct (as per Qwen3 training notebook)
+            include_reasoning = (reasoning_counter % 4 != 0)  # 75% with reasoning (3 out of 4)
+            reasoning_counter += 1
+            text = format_chatml_correction(example, include_reasoning=include_reasoning)
+            if text is None:  # Skipped due to SQL/Cypher/SPARQL
+                stats["wrong_language_filtered"] = stats.get("wrong_language_filtered", 0) + 1
+                continue
+            
             processed.append({"text": text})
             stats["negatives_processed"] += 1
             correction_collected += 1

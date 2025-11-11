@@ -28,7 +28,6 @@
           "alpha": 28,
           "scaling": "dora",
           "dropout": 0.1,
-          "path": "weights/qwen3-06b/checkpoint-250",
           "size_bytes": 0,
           "sha256": "",
           "_comment": "DoRA r=14 trained on 40k rebalanced examples. Checkpoint-250 packaged for transformation/validation investigation (flat→nested success and consistent numerical calculations)."
@@ -74,11 +73,43 @@
   ],
   
   "limitations": [
-    "schema_vs_example_confusion",
-    "cannot_transform_flat_to_nested",
-    "array_repair_issues",
-    "item_count_accuracy"
+    {
+      "pattern": "schema_vs_example_confusion",
+      "description": "Returns examples instead of schemas in some cases (tests 3, 7, 10, 12, 15)",
+      "example": "Prompt: 'Create JSON schema for: product with id, name, price' → Returns: {\"id\": \"123\", \"name\": \"Laptop\", \"price\": 999.99} instead of {\"$schema\": \"http://json-schema.org/draft-07/schema#\", \"type\": \"object\", \"properties\": {...}}",
+      "workaround": "Provide explicit schema format requirements in prompt or use post-processing to detect and convert examples to schemas"
+    },
+    {
+      "pattern": "cannot_transform_flat_to_nested",
+      "description": "Cannot transform flat JSON to nested structure (test 8)",
+      "example": "Input: {\"user_id\": \"123\", \"user_name\": \"Alice\", \"user_age\": 34} → Expected: {\"user\": {\"id\": \"123\", \"name\": \"Alice\", \"age\": 34}} but may fail",
+      "workaround": "Use checkpoint-250 which has improved flat→nested transformation capability, or provide explicit transformation instructions"
+    },
+    {
+      "pattern": "array_repair_issues",
+      "description": "Returns object instead of array in some cases (test 5)",
+      "example": "Prompt: 'Generate array of 3 todos' → Returns: {\"todo1\": {...}, \"todo2\": {...}} instead of [{...}, {...}]",
+      "workaround": "Explicitly request array format in prompt or use post-processing validation"
+    },
+    {
+      "pattern": "item_count_accuracy",
+      "description": "Returns incorrect number of items when count is specified (test 14)",
+      "example": "Prompt: 'Generate 3 hex strings' → Returns 5 items instead of 3",
+      "workaround": "Use post-processing to validate and trim to requested count"
+    }
   ],
+  
+  "quality_metrics": {
+    "benchmark_score": 3.33,
+    "base_model_score": 2.0,
+    "improvement_percent": 66.5,
+    "win_rate_vs_base": 0.33,
+    "test_queries": 15,
+    "checkpoint": "checkpoint-250",
+    "training_steps": 250,
+    "test_date": "2025-11-08",
+    "_comment": "Checkpoint-250 evaluation: 5/15 tests passed (33%). Strengths: Flat→nested transforms, numeric consistency. Weaknesses: Schema vs example confusion, inconsistent arrays. Base model: 3/15 (20%). Checkpoint-500 scored 6/15 (40%) but checkpoint-250 selected for transformation/arithmetic focus."
+  },
   
   "routing": {
     "keywords": [
@@ -240,7 +271,33 @@
       "_comment": "Unsloth/Qwen recommended settings: temp=0.7, top_p=0.8, top_k=20. Prevents repetition collapse. Grammar validation prevents syntax errors."
     },
     "trained_on": "2025-11-06",
-    "base_model_version": "qwen3-0.6b"
+    "base_model_version": "qwen3-0.6b",
+    "alternative_checkpoints": {
+      "checkpoint-500": {
+        "path": "weights/qwen3-06b/checkpoint-500",
+        "step": 500,
+        "score": 4.0,
+        "win_rate": 0.40,
+        "best_for": ["syntax_fixes", "stable_outputs"],
+        "_comment": "Better overall score (6/15 = 40%) but still confuses complex schemas. More stable outputs than checkpoint-250."
+      },
+      "checkpoint-638": {
+        "path": "weights/qwen3-06b/checkpoint-638",
+        "step": 638,
+        "score": 4.0,
+        "win_rate": 0.40,
+        "best_for": ["syntax_fixes"],
+        "_comment": "Similar to checkpoint-500 (6/15 = 40%) but may have trailing comma issues."
+      },
+      "final": {
+        "path": "weights/qwen3-06b/final",
+        "step": 638,
+        "score": 3.33,
+        "win_rate": 0.33,
+        "best_for": ["general_corrections"],
+        "_comment": "Final checkpoint (5/15 = 33%) similar to checkpoint-250 but may have loop/regression risk. General corrections work well."
+      }
+    }
   },
   
   "license": "cc-by-4.0",
