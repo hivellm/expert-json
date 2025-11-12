@@ -1,5 +1,15 @@
 # Expert JSON
 
+[![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)](https://github.com/hivellm/expert-json/releases/tag/v0.4.1)
+[![License](https://img.shields.io/badge/license-CC--BY--4.0-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-investigative-yellow.svg)](README.md#at-a-glance)
+[![Checkpoint](https://img.shields.io/badge/checkpoint-250-blue.svg)](README.md#checkpoint-analysis--selection-v030)
+
+[![Base Model](https://img.shields.io/badge/base%20model-Qwen3--0.6B-orange.svg)](README.md#at-a-glance)
+[![Adapter](https://img.shields.io/badge/adapter-DoRA%20r%3D14-blue.svg)](README.md#training--configuration)
+[![Dataset](https://img.shields.io/badge/dataset-40k%20examples-brightgreen.svg)](README.md#dataset)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20CUDA-0078d4.svg)](README.md#training--configuration)
+
 JSON generation and correction expert. Trained on 40,000 curated examples rebalance towards schema-heavy and data-extraction formats while keeping a deep correction set (≈54% generation, ≈46% correction). Dataset includes examples from APIs.guru, SchemaStore, CloudEvents, Paraloq, MasterControl, Microsoft schemas, and enhanced repair patterns.
 
 **Version:** 0.4.1 (Rebalanced Dataset) | **Checkpoint:** checkpoint-250 (investigative build) | **Dataset:** 40,000 examples (70 % generic, 30 % issue-focused)
